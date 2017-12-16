@@ -1,4 +1,4 @@
-package network;
+package networkConnections;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
