@@ -12,7 +12,7 @@ public class HTTPConnectionTest {
     public void testConnectionToAPISample() {
         try {
             HTTPConnection connectionFromURL = HTTPConnection.createConnectionFromURL(
-                    "http://samples.openweathermap.org/data/2.5/forecast?id=524901&appid=b1b15e88fa797225412429c1c50c122a15");
+                    "http://samples.openweathermap.org/data/2.5/forecast?id=524901&appid=c5879c907ea67ceab79a594b2b3d9d19");
             int responseCode = connectionFromURL.getResponseCode();
             assertEquals(HttpURLConnection.HTTP_OK, responseCode);
         } catch (IOException e) {
