@@ -1,15 +1,15 @@
 package requests;
 
-import utilitiesTest.Constants;
+import utilities.Constants;
 
 import java.util.Optional;
 
-public class WeatherRequest {
+public class WeatherAppRequest {
     String cityName;
     String cityCode;
     Constants.TemperatureUnits tempUnit = Constants.TemperatureUnits.getUnitByDefault();
 
-    WeatherRequest() {
+    WeatherAppRequest() {
 
     }
 

@@ -2,22 +2,26 @@ package storageTest;
 
 import org.junit.Before;
 import org.junit.Test;
+import requests.WeatherAppRequest;
+import requests.WeatherAppRequestFactory;
+import storage.OpenWeatherAppStorage;
+import storage.WeatherRepository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class OpenWeatherAppStorageTest {
-    private final WeatherRequestFactory weatherRequestFactory = new WeatherRequestFactory();
+    private final WeatherAppRequestFactory weatherRequestFactory = new WeatherAppRequestFactory();
     private WeatherRepository repository;
 
     @Before
     public void setUp() {
-        repository = new OpenWeatherRepository();
+        repository = new OpenWeatherAppStorage();
     }
 
     @Test
     public void testRepositoryGivesCurrentWeatherReportForTheSameCityAsInRequest() {
-        WeatherRequest request = weatherRequestFactory.makeWeatherRequest("Tallinn", "EE");
+        WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("Tallinn", "EE");
 
         CurrentWeatherReport currentWeatherReport = repository.getCurrentWeatherReport(request);
 
@@ -25,21 +29,14 @@ public class OpenWeatherAppStorageTest {
         assertEquals(request.getCountryCode().get(), currentWeatherReport.getCountryCode());
     }
 
-    @Test(expected = APIDataNotFoundException.class)
-    public void testGetCurrentWeatherReportThrowsExceptionIfIncorrectCity() throws APIDataNotFoundException {
-        WeatherRequest request = weatherRequestFactory.makeWeatherRequest("kjjgyiv", "EE");
-
-        repository.getCurrentWeatherReport(request);
-    }
-
     @Test
     public void testTemperatureUnitInCurrentWeatherReportIsTheSameIfItIsNotSpecifiedInRequest() {
         try {
-            WeatherRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US");
+            WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("Texas", "US");
 
             CurrentWeatherReport report = repository.getCurrentWeatherReport(request);
 
-            assertEquals("New York", report.getCityName());
+            assertEquals("Texas", report.getCityName());
             assertEquals("US", report.getCountryCode());
             assertEquals(Constants.TemperatureUnits.getUnitByDefault(), report.getTemperatureUnit());
         } catch (APIDataNotFoundException e) {
@@ -50,7 +47,7 @@ public class OpenWeatherAppStorageTest {
     @Test
     public void testTempUnitInTheCurrentWeatherReportIsTheSameAsInRequest() {
         try {
-            WeatherRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US",
+            WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US",
                     Constants.TemperatureUnits.METRIC);
 
             CurrentWeatherReport report = repository.getCurrentWeatherReport(request);
@@ -66,7 +63,7 @@ public class OpenWeatherAppStorageTest {
     @Test
     public void testRepositoryGivesForecastForTheSameCityAsInRequest() {
         try {
-            WeatherRequest request = weatherRequestFactory.makeWeatherRequest("Tallinn", "EE");
+            WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("Tallinn", "EE");
 
             WeatherForecastReport weatherForecastReport = repository.getWeatherForecastReport(request);
 
@@ -79,7 +76,7 @@ public class OpenWeatherAppStorageTest {
 
     @Test(expected = APIDataNotFoundException.class)
     public void testGetForecastReportThrowsExceptionIfCityIsNotCorrect() throws APIDataNotFoundException {
-        WeatherRequest request = weatherRequestFactory.makeWeatherRequest("NoCity", "EE");
+        WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("NoCity", "EE");
 
         repository.getWeatherForecastReport(request);
     }
@@ -87,7 +84,7 @@ public class OpenWeatherAppStorageTest {
     @Test
     public void testTemperatureUnitInForecastIsTheSameIfItIsNotSpecifiedInRequest() {
         try {
-            WeatherRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US");
+            WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US");
 
             WeatherForecastReport report = repository.getWeatherForecastReport(request);
 
@@ -102,7 +99,7 @@ public class OpenWeatherAppStorageTest {
     @Test
     public void testTempUnitInForecastReportIsTheSameAsInRequest() {
         try {
-            WeatherRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US",
+            WeatherAppRequest request = weatherRequestFactory.makeWeatherRequest("New York", "US",
                     Constants.TemperatureUnits.IMPERIAL);
 
             WeatherForecastReport report = repository.getWeatherForecastReport(request);

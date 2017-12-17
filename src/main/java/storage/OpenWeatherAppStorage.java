@@ -5,7 +5,7 @@ import data.WeatherForecastReport;
 import exceptions.APIDataNotFoundException;
 import exceptions.IncorrectAPIOutputException;
 import network.HTTPConnection;
-import requests.WeatherRequest;
+import requests.WeatherAppRequest;
 import utilitiesTest.Constants;
 import weatherdata.*;
 import weatherrequest.WeatherRequest;
@@ -26,7 +26,7 @@ public class OpenWeatherAppStorage implements WeatherRepository {
         currentWeatherReportFabric = new CurrentWeatherReportFabric();
     }
 
-    private static String getDataLineForString(WeatherRequest request) {
+    private static String getDataLineForString(WeatherAppRequest request) {
         String tempUnitString = request.getTemperatureUnit() == Constants.TemperatureUnits.getUnitByDefault() ?
                 "" : String.format("&units=%s", request.getTemperatureUnit().toString().toLowerCase());
 
@@ -37,11 +37,11 @@ public class OpenWeatherAppStorage implements WeatherRepository {
         return String.format("q=%s%s&APPID=%s", cityData, tempUnitString, API_KEY);
     }
 
-    private static String makeCurrentWeatherRequestLinkFromWeatherRequest(WeatherRequest request) {
+    private static String makeCurrentWeatherRequestLinkFromWeatherRequest(WeatherAppRequest request) {
         return WEATHER_API_LINK + getDataLineForString(request);
     }
 
-    private static String makeWeatherForecastRequestLinkFromWeatherRequest(WeatherRequest request) {
+    private static String makeWeatherForecastRequestLinkFromWeatherRequest(WeatherAppRequest request) {
         return FORECAST_API_LINK + getDataLineForString(request);
     }
 
@@ -73,7 +73,7 @@ public class OpenWeatherAppStorage implements WeatherRepository {
     }
 
     @Override
-    public WeatherForecastReport getWeatherForecastReport(WeatherRequest request) throws APIDataNotFoundException {
+    public WeatherForecastReport getWeatherForecastReport(WeatherAppRequest request) throws APIDataNotFoundException {
         try {
             String connectionLink = makeWeatherForecastRequestLinkFromWeatherRequest(request);
             String jsonFile = getJSON(connectionLink);
@@ -85,7 +85,7 @@ public class OpenWeatherAppStorage implements WeatherRepository {
     }
 
     @Override
-    public CurrentWeatherReport getCurrentWeatherReport(WeatherRequest request) throws APIDataNotFoundException {
+    public CurrentWeatherReport getCurrentWeatherReport(WeatherAppRequest request) throws APIDataNotFoundException {
         try {
             String connectionLink = makeCurrentWeatherRequestLinkFromWeatherRequest(request);
             String jsonFile = getJSON(connectionLink);

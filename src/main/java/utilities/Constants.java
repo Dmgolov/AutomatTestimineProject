@@ -29,7 +29,6 @@ public class Constants {
                     throw new IllegalArgumentException(String.format("Wrong temperature measure: %s", temperatureMeasure));
             }
         }
-
         public String getSymbol() {
             return symbol;
         }
